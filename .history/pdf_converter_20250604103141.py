@@ -44,9 +44,6 @@ class PDFConverterApp:
         self.window.geometry("900x700")
         self.window.configure(bg="#1a1a2e")
 
-        # Store icon references to prevent garbage collection
-        self._icon_refs = {}
-
         # Create and set application icon
         self.create_app_icon()
 
@@ -83,13 +80,12 @@ class PDFConverterApp:
         self.nav_frame.grid(row=1, column=0, sticky="ew", pady=(0, 20))
         self.nav_frame.grid_columnconfigure((0, 1, 2), weight=1) # Center buttons
 
-        # Create image icons for navigation
-        self._icon_refs['home'] = create_icon(30, "H", "#e94560", "white")
-        self._icon_refs['about'] = create_icon(30, "i", "#e94560", "white")
+        self.home_icon = create_icon(30, "🏠", "#e94560", "white")
+        self.about_icon = create_icon(30, "ℹ️", "#e94560", "white")
 
         self.home_button = tk.Button(
             self.nav_frame,
-            image=self._icon_refs['home'],
+            image=self.home_icon,
             text=" Home", # Add text for better usability
             compound="left",
             command=lambda: self.tab_control.select(self.convert_tab), # Switch to convert tab
@@ -101,7 +97,7 @@ class PDFConverterApp:
 
         self.about_button = tk.Button(
             self.nav_frame,
-            image=self._icon_refs['about'],
+            image=self.about_icon,
             text=" About",
             compound="left",
             command=self.show_about_info,
@@ -115,17 +111,13 @@ class PDFConverterApp:
         self.tab_control = ttk.Notebook(self.main_frame)
         self.tab_control.grid(row=2, column=0, sticky="ew", pady=(0, 20)) # Updated row
 
-        # Create image icons for tabs
-        self._icon_refs['pdf_tab'] = create_icon(20, "P", "#e94560", "white")
-        self._icon_refs['recent_tab'] = create_icon(20, "R", "#e94560", "white")
-
         # Create Convert PDF tab with icon
         self.convert_tab = tk.Frame(self.tab_control, bg="#1a1a2e")
-        self.tab_control.add(self.convert_tab, text=" INSERT PDF FILE", image=self._icon_refs['pdf_tab'], compound="left")
+        self.tab_control.add(self.convert_tab, text="📄 INSERT PDF FILE")
 
         # Create Recent Files tab with icon
         self.recent_tab = tk.Frame(self.tab_control, bg="#1a1a2e")
-        self.tab_control.add(self.recent_tab, text=" Recent Files", image=self._icon_refs['recent_tab'], compound="left")
+        self.tab_control.add(self.recent_tab, text="📋 Recent Files")
 
         # Configure tab style
         style = ttk.Style()
@@ -191,14 +183,10 @@ class PDFConverterApp:
         icon_label.pack(side="left", padx=10)
 
     def setup_convert_tab(self):
-        self._icon_refs['file'] = create_icon(18, "F", "#e94560", "white")
-        self._icon_refs['select'] = create_icon(18, "S", "#e94560", "white")
-        self._icon_refs['convert'] = create_icon(18, "C", "#e94560", "white")
-        self._icon_refs['status'] = create_icon(18, "S", "#e94560", "white")
-
         self.desc_label = tk.Label(
             self.convert_tab,
-            text="Convert your PDF to Word with a focus on text extraction.\nSupports English, Arabic, and Urdu languages for text content.",
+            text="📄 Convert your PDF to Word with a focus on text extraction.\n"
+                 "Supports English, Arabic, and Urdu languages for text content.",
             font=("Helvetica", 14),
             fg="#ffffff",
             bg="#1a1a2e",
@@ -212,9 +200,7 @@ class PDFConverterApp:
 
         self.file_label = tk.Label(
             self.file_frame,
-            text=" No file selected",
-            image=self._icon_refs['file'],
-            compound="left",
+            text="📄 No file selected",
             font=("Helvetica", 12),
             fg="#ffffff",
             bg="#1a1a2e"
@@ -223,9 +209,7 @@ class PDFConverterApp:
 
         self.select_button = tk.Button(
             self.file_frame,
-            text=" Select PDF",
-            image=self._icon_refs['select'],
-            compound="left",
+            text="📂 Select PDF",
             command=self.select_file,
             font=("Helvetica", 14, "bold"),
             bg="#e94560",
@@ -242,9 +226,7 @@ class PDFConverterApp:
         # Convert button with icon
         self.convert_button = tk.Button(
             self.convert_tab,
-            text=" Convert to Word",
-            image=self._icon_refs['convert'],
-            compound="left",
+            text="🔄 Convert to Word",
             command=self.start_conversion,
             state="disabled",
             font=("Helvetica", 14, "bold"),
@@ -278,9 +260,7 @@ class PDFConverterApp:
         # Status label with icon
         self.status_label = tk.Label(
             self.convert_tab,
-            text=" Ready to convert your PDF",
-            image=self._icon_refs['status'],
-            compound="left",
+            text="📄 Ready to convert your PDF",
             font=("Helvetica", 12),
             fg="#ffffff",
             bg="#1a1a2e"
@@ -288,17 +268,12 @@ class PDFConverterApp:
         self.status_label.pack(pady=10)
 
     def setup_recent_tab(self):
-        self._icon_refs['open'] = create_icon(16, "O", "#e94560", "white")
-        self._icon_refs['clear'] = create_icon(16, "X", "#e94560", "white")
-
         self.recent_frame = tk.Frame(self.recent_tab, bg="#1a1a2e")
         self.recent_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
         self.recent_label = tk.Label(
             self.recent_frame,
-            text=" Recently Converted Files",
-            image=self._icon_refs['recent_tab'],
-            compound="left",
+            text="📋 Recently Converted Files",
             font=("Helvetica", 16, "bold"),
             fg="#ffffff",
             bg="#1a1a2e"
@@ -328,9 +303,7 @@ class PDFConverterApp:
 
         self.open_button = tk.Button(
             button_frame,
-            text=" Open File",
-            image=self._icon_refs['open'],
-            compound="left",
+            text="📂 Open File",
             command=self.open_selected_file,
             font=("Helvetica", 12, "bold"),
             bg="#e94560",
@@ -346,9 +319,7 @@ class PDFConverterApp:
 
         self.clear_button = tk.Button(
             button_frame,
-            text=" Clear List",
-            image=self._icon_refs['clear'],
-            compound="left",
+            text="🗑️ Clear List",
             command=self.clear_recent_files,
             font=("Helvetica", 12, "bold"),
             bg="#e94560",
@@ -538,6 +509,9 @@ class PDFConverterApp:
             circle = self.canvas.create_oval(x-100, y-100, x+100, y+100,
                                              fill="#e94560", outline="", stipple="gray50")
             self.circles.append({"id": circle, "dx": 2, "dy": 2})
+        
+        # Ensure canvas is behind other widgets
+        self.canvas.lower()
 
     def start_background_animation(self):
         def animate():
